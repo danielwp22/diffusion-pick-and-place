@@ -32,6 +32,7 @@ Key modifications:
    - Denoising Diffusion Probabilistic Model (DDPM)  
    - U-Net backbone with time-step conditioning  
    - Predicts 6-DoF end-effector poses for grasp and place actions
+   - Trained on 2000 demos, 30000 steps
 
 3. **Training Objective:**  
    \[
@@ -51,9 +52,6 @@ The diffusion policy was successfully able to:
 - Generalize across varying object poses  
 - Achieve high success rates without explicit motion planning  
 
-🎥 **Demo Video:**  
-[![Demo Video](https://imgur.com/a/yNV73eJ)](https://imgur.com/a/yNV73eJ)
-
 ---
 
 ## 🧠 Repository Structure
@@ -66,3 +64,11 @@ diffusion-pick-and-place/
 ├── train.py                # Training entry point
 ├── eval.py                 # Evaluation script
 └── README.md               # You are here
+```
+
+---
+
+## Future goals
+
+- Implementing score-based diffusion to enable more consistent pick-and-place.
+
