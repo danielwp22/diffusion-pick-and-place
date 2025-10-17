@@ -3,7 +3,8 @@
 This project implements a **diffusion-based policy** using a **U-Net architecture** to perform **6-DoF pick-and-place manipulation** within the [Ravens](https://github.com/google-research/ravens) framework.  
 By conditioning a diffusion model on visual observations and goal specifications, the system learns to generate continuous pick-and-place trajectories that achieve robust manipulation performance.
 
-https://imgur.com/a/yNV73eJ
+🎥 **Demo:**  
+[![Demo Video](https://imgur.com/a/yNV73eJ)](https://imgur.com/a/yNV73eJ)
 
 ---
 
