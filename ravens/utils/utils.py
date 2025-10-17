@@ -25,6 +25,7 @@ import meshcat.transformations as mtf
 import numpy as np
 from transforms3d import euler
 
+import tensorflow as tf
 import pybullet as p
 
 #-----------------------------------------------------------------------------
@@ -635,3 +636,62 @@ def meshcat_visualize(vis, obs, act, info):
 
     vis['pointclouds/' + str(cam_index)].set_object(
         g.PointCloud(position=verts, color=colors))
+
+
+#my utils
+# Add these functions to ravens/utils/utils.py
+# Add these functions to ravens/utils/utils.py
+
+def normalize(a0, W=160, H=320):
+    """
+    Normalize action to [-1, 1] for diffusion training.
+    
+    Args:
+        a0: [col0, row0, theta0, col1, row1, theta1]
+        W: image width (160)
+        H: image height (320)
+    
+    Returns:
+        Normalized action in [-1, 1] range
+    """
+    col0, row0, theta0, col1, row1, theta1 = a0
+    
+    # Normalize positions to [-1, 1]
+    col0_n = col0 / W * 2 - 1
+    row0_n = row0 / H * 2 - 1
+    col1_n = col1 / W * 2 - 1
+    row1_n = row1 / H * 2 - 1
+    
+    # Wrap angles to [-π, π] then normalize to [-1, 1]
+    theta0 = np.arctan2(np.sin(theta0), np.cos(theta0))
+    theta1 = np.arctan2(np.sin(theta1), np.cos(theta1))
+    theta0_n = theta0 / np.pi
+    theta1_n = theta1 / np.pi
+    
+    return np.array([col0_n, row0_n, theta0_n, col1_n, row1_n, theta1_n], np.float32)
+
+
+def denormalize_and_clip(a, W=160, H=320):
+    """
+    Denormalize action from [-1, 1] back to pixel/radian space.
+    
+    Args:
+        a: normalized action in [-1, 1]
+        W: image width (160)
+        H: image height (320)
+    
+    Returns:
+        [col0, row0, theta0, col1, row1, theta1] in pixel/radian space
+    """
+    col0 = np.clip((a[0] + 1) / 2 * W, 0, W - 1)
+    row0 = np.clip((a[1] + 1) / 2 * H, 0, H - 1)
+    theta0 = a[2] * np.pi
+    col1 = np.clip((a[3] + 1) / 2 * W, 0, W - 1)
+    row1 = np.clip((a[4] + 1) / 2 * H, 0, H - 1)
+    theta1 = a[5] * np.pi
+    
+    # Wrap angles to [-π, π]
+    theta0 = np.arctan2(np.sin(theta0), np.cos(theta0))
+    theta1 = np.arctan2(np.sin(theta1), np.cos(theta1))
+    
+    return np.array([col0, row0, theta0, col1, row1, theta1], np.float32)
